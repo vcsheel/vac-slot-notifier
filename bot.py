@@ -14,14 +14,9 @@ my_secret = os.environ['API_KEY']
 app = Flask(__name__)
 bot = telebot.TeleBot(my_secret)
 # bot.remove_webhook()
-print(my_secret)
-print(cons.HOST_URL)
 webhook_url = cons.HOST_URL + my_secret
-bot.set_webhook(url=webhook_url)
+# bot.set_webhook(url=webhook_url)
 
-@bot.message_handler(commands=['greet'])
-def greet(message):
-  bot.send_message(my_id, "Hey! Hows it going?")
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -254,11 +249,11 @@ def getMessage():
     return "!", 200
 
 
-# @app.route("/")
-# def webhook():
-#     bot.remove_webhook()
-#     bot.set_webhook(url='https://LiveVioletredFlashmemory.vsheel.repl.co/' + my_secret)
-#     return "!", 200
+@app.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=webhook_url)
+    return "!", 200
 
 
 if __name__ == "__main__":
