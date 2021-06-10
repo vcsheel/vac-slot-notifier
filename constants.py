@@ -14,4 +14,4 @@ headers = {"Host": "cdn-api.co-vin.in",
 "Cache-Control": 'max-age=0',
 "TE": "Trailers"}
 
-HOST_URL = 'https://young-hamlet-73367.herokuapp.com/'
+HOST_URL = 'https://vac-slot-notifier.herokuapp.com/'
