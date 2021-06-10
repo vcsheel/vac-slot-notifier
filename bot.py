@@ -14,7 +14,10 @@ my_secret = os.environ['API_KEY']
 app = Flask(__name__)
 bot = telebot.TeleBot(my_secret)
 # bot.remove_webhook()
-bot.set_webhook(url=cons.HOST_URL + my_secret)
+print(my_secret)
+print(cons.HOST_URL)
+webhook_url = cons.HOST_URL + my_secret
+bot.set_webhook(url=webhook_url)
 
 @bot.message_handler(commands=['greet'])
 def greet(message):
