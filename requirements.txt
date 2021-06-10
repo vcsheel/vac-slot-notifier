@@ -1,4 +1,4 @@
-pyTelegramBotAPI==3.7.9
+pyTelegramBotAPI==3.7.8
 telebot== 0.0.4
 timeloop==1.0.2
 flask==2.0.1
