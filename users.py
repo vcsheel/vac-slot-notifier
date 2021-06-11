@@ -4,15 +4,20 @@ from json import JSONDecodeError
 import constants as cons
 
 
-def save_user_details(chat_id, dist, age, dose_type):
+def save_user_details(chat_id, dist, age, dose_type, isUpdate):
     data = get_user(chat_id)
-    if data is None:
+    if data is None or isUpdate:
         user_details = dict()
-        user_details['dist_id'] = [cons.district_map[dist.lower()]]
+        user_details['dist_id'] = [validate_dist(dist)]
         user_details['age'] = int(age)
         user_details['dose_type'] = int(dose_type)
 
-        print('Saving user details....')
+        try:
+            user_details['notify'] = data['notify']
+        except:
+            user_details['notify'] = False
+
+        print('Saving user details.... ', chat_id)
         save_user(chat_id, user_details)
 
     else:

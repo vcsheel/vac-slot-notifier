@@ -11,7 +11,6 @@ from utils import *
 from users import *
 from format_util import *
 
-
 my_secret = os.environ['API_KEY']
 app = Flask(__name__)
 bot = telebot.TeleBot(my_secret)
@@ -26,7 +25,13 @@ tl = Timeloop()
 @bot.message_handler(commands=['start'])
 def start(message):
     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number(1 or 2) separated by space")
-    bot.register_next_step_handler(sent_msg, dist_handler)
+    bot.register_next_step_handler(sent_msg, dist_handler, False)
+
+
+@bot.message_handler(commands=['update'])
+def update_user_config(message):
+    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number(1 or 2) separated by space")
+    bot.register_next_step_handler(sent_msg, dist_handler, True)
 
 
 @bot.message_handler(commands=['add_district'])
@@ -122,7 +127,7 @@ def remove_from_user_dists(message):
             bot.send_message(message.chat.id, "Removed from your list")
 
 
-def dist_handler(message):
+def dist_handler(message, isUpdate):
     user_details = message.text.split()
     if len(user_details) < 3:
         bot.send_message(message.chat.id, "Invalid Entry, /start again")
@@ -133,9 +138,12 @@ def dist_handler(message):
             bot.send_message(message.chat.id, "Invalid district")
             return
 
-        # save user
-        save_user_details(message.chat.id, dist, age, dose_type)
-        get_available_slots(message.chat.id, [dist_id], dose_type, age, check_date)
+        # save/update user
+        save_user_details(message.chat.id, dist, age, dose_type, isUpdate)
+        if not isUpdate:
+            get_available_slots(message.chat.id, [dist_id], dose_type, age, check_date)
+        else:
+            bot.send_message(message.chat.id, "Your preference have been updated - check /my_details")
 
 
 def get_available_slots(chat_id, dist_id, dose_type, age, check_date):
