@@ -1,3 +1,5 @@
+from constants import cons
+
 def format_message(resp, dose_type):
     message = "\n<strong>Slots Found</strong>\n"
     for key_date, centers in resp.items():

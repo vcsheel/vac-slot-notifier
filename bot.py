@@ -32,7 +32,13 @@ def start(message):
 @bot.message_handler(commands=['add_district'])
 def add_dist_input(message):
     sent_msg = bot.send_message(message.chat.id, "Enter district name")
-    bot.register_next_step_handler(sent_msg, add_dist_to_user_list)
+    bot.register_next_step_handler(sent_msg, add_to_user_dists)
+
+
+@bot.message_handler(commands=['remove_district'])
+def add_dist_input(message):
+    sent_msg = bot.send_message(message.chat.id, "Enter district name")
+    bot.register_next_step_handler(sent_msg, remove_from_user_dists)
 
 
 @bot.message_handler(commands=['my_details'])
@@ -80,7 +86,7 @@ def pause_notifier(message):
         bot.send_message(message.chat.id, "You don't have any active Subscription")
 
 
-def add_dist_to_user_list(message):
+def add_to_user_dists(message):
     user = get_user(message.chat.id)
     if user is not None:
         try:
@@ -98,23 +104,32 @@ def add_dist_to_user_list(message):
             bot.send_message(message.chat.id, "District already saved in your list")
 
 
+def remove_from_user_dists(message):
+    user = get_user(message.chat.id)
+    if user is not None:
+        try:
+            new_dist_id = cons.district_map[message.text.lower()]
+        except:
+            print("Invalid district entered")
+            bot.send_message(message.chat.id, "Invalid district name")
+            return
+
+        if new_dist_id not in user['dist_id']:
+            bot.send_message(message.chat.id, "District not in your saved list")
+        else:
+            user['dist_id'].remove(new_dist_id)
+            save_user(message.chat.id, user)
+            bot.send_message(message.chat.id, "Removed from your list")
+
+
 def dist_handler(message):
     user_details = message.text.split()
     if len(user_details) < 3:
-        sent_msg = bot.send_message(message.chat.id,
-                                    "You have entered wrong value, please enter your age, district, dose number(1 or "
-                                    "2) and date(dd-mm-yyyy)")
-        bot.register_next_step_handler(sent_msg, dist_handler)
+        bot.send_message(message.chat.id, "Invalid Entry, /start again")
     else:
-        age = int(user_details[0])
-        dist = user_details[1]
-        dose_type = int(user_details[2])
-        check_date = date.today().strftime("%d-%m-%Y")
-        if len(user_details) == 4:
-            check_date = user_details[3]
-        try:
-            dist_id = cons.district_map[dist.lower()]
-        except:
+        age, dist, dose_type, check_date = populate_user_details(user_details)
+        dist_id = validate_dist(dist)
+        if not dist_id:
             bot.send_message(message.chat.id, "Invalid district")
             return
 
