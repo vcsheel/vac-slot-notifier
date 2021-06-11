@@ -1,4 +1,5 @@
 calendarByDistrict_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict"
+cowin_register_url = "https://selfregistration.cowin.gov.in/"
 
 district_map = {'hyderabad': 581, 'lakhisarai': 84, 'rangareddy': 603, 'munger': 85}
 
