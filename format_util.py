@@ -1,4 +1,5 @@
-from constants import cons
+import constants as cons
+
 
 def format_message(resp, dose_type):
     message = "\n<strong>Slots Found</strong>\n"
