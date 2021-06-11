@@ -24,13 +24,13 @@ tl = Timeloop()
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by space")
+    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
     bot.register_next_step_handler(sent_msg, dist_handler, False)
 
 
 @bot.message_handler(commands=['update'])
 def update_user_config(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by space")
+    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
     bot.register_next_step_handler(sent_msg, dist_handler, True)
 
 
@@ -160,7 +160,7 @@ def delete_user_handle(message):
 
 
 def dist_handler(message, isUpdate):
-    user_details = message.text.split()
+    user_details = message.text.split(',')
     if len(user_details) < 3:
         bot.send_message(message.chat.id, "Invalid Entry, /start again")
     else:
