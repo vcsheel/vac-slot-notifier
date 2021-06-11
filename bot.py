@@ -49,9 +49,12 @@ def add_dist_input(message):
 @bot.message_handler(commands=['my_details'])
 def get_user_saved_details(message):
     user = get_user(message.chat.id)
-    subs = {v: k for k, v in cons.district_map.items()}
-    user['dist_id'] = [subs.get(item) for item in user['dist_id']]
-    bot.send_message(message.chat.id, format_user_details(user), parse_mode="HTML")
+    if user is not None:
+        subs = {v: k for k, v in cons.district_map.items()}
+        user['dist_id'] = [subs.get(item) for item in user['dist_id']]
+        bot.send_message(message.chat.id, format_user_details(user), parse_mode="HTML")
+    else:
+        bot.send_message(message.chat.id, "Your preference not saved, use /start to save")
 
 
 @bot.message_handler(commands=['slots'])
@@ -68,11 +71,15 @@ def get_slots(message):
 @bot.message_handler(commands=['subscribe'])
 def start_user_thread(message):
     user = get_user(message.chat.id)
-    if user is not None and not user['notify']:
-        user['notify'] = True
-        save_user(message.chat.id, user)
+    if user is not None:
+        if user['notify']:
+            user['notify'] = True
+            save_user(message.chat.id, user)
+        else:
+            bot.send_message(message.chat.id, "You already have an active subscription")
+            return
     else:
-        bot.send_message(message.chat.id, "You already have an active subscription")
+        bot.send_message(message.chat.id, "Your Preference not found, please register using /start")
         return
 
     print('Subscription success for ', message.chat.id)
@@ -82,13 +89,17 @@ def start_user_thread(message):
 @bot.message_handler(commands=['unsubscribe'])
 def pause_notifier(message):
     user = get_user(message.chat.id)
-    if user is not None and user['notify']:
-        user['notify'] = False
-        save_user(message.chat.id, user)
-        print('Subscription removed for user ', message.chat.id)
-        bot.send_message(message.chat.id, 'Subscription notification removed')
+    if user is not None:
+        if user['notify']:
+            user['notify'] = False
+            save_user(message.chat.id, user)
+            print('Subscription removed for user ', message.chat.id)
+            bot.send_message(message.chat.id, 'Subscription notification removed')
+        else:
+            bot.send_message(message.chat.id, "You don't have any active Subscription")
     else:
-        bot.send_message(message.chat.id, "You don't have any active Subscription")
+        bot.send_message(message.chat.id, "Your Preference not found, please register using /start")
+        return
 
 
 def add_to_user_dists(message):
@@ -107,6 +118,8 @@ def add_to_user_dists(message):
             bot.send_message(message.chat.id, "Saved to your list")
         else:
             bot.send_message(message.chat.id, "District already saved in your list")
+    else:
+        bot.send_message(message.chat.id, "User not found, please register using /start")
 
 
 def remove_from_user_dists(message):
@@ -125,6 +138,8 @@ def remove_from_user_dists(message):
             user['dist_id'].remove(new_dist_id)
             save_user(message.chat.id, user)
             bot.send_message(message.chat.id, "Removed from your list")
+    else:
+        bot.send_message(message.chat.id, "User not found, please register using /start")
 
 
 def dist_handler(message, isUpdate):

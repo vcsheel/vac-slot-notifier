@@ -26,10 +26,7 @@ def save_user_details(chat_id, dist, age, dose_type, isUpdate):
 
 def save_user(chat_id, user_details):
     with open('users.json', 'r+') as out:
-        try:
-            data = json.loads(out.read())
-        except JSONDecodeError:
-            data = {}
+        data = get_data_from_file(out)
 
         # print("all users: ", data)
         data[str(chat_id)] = user_details
@@ -42,10 +39,7 @@ def save_user(chat_id, user_details):
 
 def get_user(chat_id):
     with open('users.json', 'r') as f:
-        try:
-            data = json.loads(f.read())
-        except JSONDecodeError:
-            data = {}
+        data = get_data_from_file(f)
 
         if str(chat_id) in data:
             print('User found...')
@@ -53,6 +47,30 @@ def get_user(chat_id):
         else:
             print('User not found...')
             return None
+
+
+def delete_user(chat_id):
+    with open('users.json', 'r+') as f:
+        data = get_data_from_file(f)
+
+        if str(chat_id) in data:
+            data.pop(str(chat_id))
+            f.seek(0)
+            f.truncate()
+            f.write(json.dumps(data))
+            print('User deleted')
+            return True
+        else:
+            print('User not found...')
+            return False
+
+
+def get_data_from_file(file):
+    try:
+        data = json.loads(file.read())
+    except JSONDecodeError:
+        data = {}
+    return data
 
 
 def validate_dist(dist_name):

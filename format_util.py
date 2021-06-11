@@ -3,6 +3,7 @@ import constants as cons
 
 def format_message(resp, dose_type):
     message = "\n<strong>Slots Found</strong>\n"
+    message += "------------\n"
     for key_date, centers in resp.items():
         message += "\n<b><ins>" + key_date + "</ins></b>\n"
         for center in centers:
@@ -11,7 +12,7 @@ def format_message(resp, dose_type):
                 center[cons.doses[dose_type]])
             message += "</code></pre>\n"
 
-    message += '\n Visit <a href="' + cons.cowin_register_url + '"> CoWIN </a> portal to register'
+    message += '\n <b>Visit</b> <a href="' + cons.cowin_register_url + '"> CoWIN </a> <b>portal to register</b>'
     return message
 
 
