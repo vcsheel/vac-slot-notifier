@@ -6,7 +6,7 @@ from json import JSONDecodeError
 import constants as cons
 
 REDIS_URL = os.environ['REDIS_URL']
-redis_handle = redis.Redis(REDIS_URL)
+redis_handle = redis.from_url(url=REDIS_URL)
 
 
 def get_user(chat_id):
