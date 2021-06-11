@@ -1,8 +1,9 @@
-import os
 import json
-import redis
+import os
 from datetime import date
-from json import JSONDecodeError
+
+import redis
+
 import constants as cons
 
 REDIS_URL = os.environ['REDIS_URL']
@@ -24,7 +25,7 @@ def save_user(chat_id, user_details):
 
 
 def delete_user(chat_id):
-    print("Deleting user ",chat_id)
+    print("Deleting user ", chat_id)
     resp = redis_handle.delete(chat_id)
     if resp == 0:
         print("no such user found")
