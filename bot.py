@@ -78,7 +78,7 @@ def get_slots(message):
 def start_user_thread(message):
     user = get_user(message.chat.id)
     if user is not None:
-        if user['notify']:
+        if not user['notify']:
             user['notify'] = True
             save_user(message.chat.id, user)
         else:
