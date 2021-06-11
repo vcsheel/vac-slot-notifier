@@ -24,14 +24,20 @@ tl = Timeloop()
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number(1 or 2) separated by space")
+    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by space")
     bot.register_next_step_handler(sent_msg, dist_handler, False)
 
 
 @bot.message_handler(commands=['update'])
 def update_user_config(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number(1 or 2) separated by space")
+    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by space")
     bot.register_next_step_handler(sent_msg, dist_handler, True)
+
+
+@bot.message_handler(commands=['delete'])
+def delete_user_config(message):
+    sent_msg = bot.send_message(message.chat.id, "Are you sure you want to delete your data : (yes/no)")
+    bot.register_next_step_handler(sent_msg, delete_user_handle)
 
 
 @bot.message_handler(commands=['add_district'])
@@ -140,6 +146,17 @@ def remove_from_user_dists(message):
             bot.send_message(message.chat.id, "Removed from your list")
     else:
         bot.send_message(message.chat.id, "User not found, please register using /start")
+
+
+def delete_user_handle(message):
+    res = message.text.lower()
+    if res == 'yes':
+        print('deleting user ', message.chat.id, '.....')
+        is_del = delete_user(message.chat.id)
+        if is_del:
+            bot.send_message(message.chat.id, "Your preference data has been removed")
+        else:
+            bot.send_message(message.chat.id, "No preference data found")
 
 
 def dist_handler(message, isUpdate):
