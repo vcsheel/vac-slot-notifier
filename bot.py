@@ -209,11 +209,7 @@ def get_available_slots_for_thread(chat_id, dist_id, dose_type, age, check_date)
 
 # Threads to check and notify every minute for slots
 def start_threads():
-    with open('users.json', 'r') as f:
-        try:
-            users = json.loads(f.read())
-        except:
-            users = {}
+    users = get_all_user()
 
     check_date = date.today().strftime("%d-%m-%Y")
     threads = [threading.Thread(target=get_available_slots_for_thread,

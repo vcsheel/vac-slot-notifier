@@ -32,6 +32,17 @@ def delete_user(chat_id):
         print("User Delete op is successful")
 
 
+def get_all_user():
+    print("Get all users....")
+    keys = redis_handle.keys()
+    keys = [json.loads(x) for x in keys]
+
+    val = redis_handle.mget(keys)
+    val = [json.loads(x) for x in val]
+
+    return dict(zip(keys, val))
+
+
 def save_user_details(chat_id, dist, age, dose_type, isUpdate):
     data = get_user(chat_id)
     if data is None or isUpdate:
