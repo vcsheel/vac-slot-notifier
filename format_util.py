@@ -10,6 +10,8 @@ def format_message(resp, dose_type):
             message += center['center_name'] + ", " + center['district'] + " -- Dose " + str(dose_type) + " : " + str(
                 center[cons.doses[dose_type]])
             message += "</code></pre>\n"
+
+    message += '\n Visit <a href="https://selfregistration.cowin.gov.in/"> CoWIN </a> portal to register'
     return message
 
 
