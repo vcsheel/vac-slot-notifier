@@ -1,7 +1,35 @@
+import os
 import json
+import redis
 from datetime import date
 from json import JSONDecodeError
 import constants as cons
+
+REDIS_URL = os.environ['REDIS_URL']
+redis_handle = redis.Redis(REDIS_URL)
+
+
+def get_user(chat_id):
+    user = redis_handle.get(chat_id)
+    if user:
+        return json.loads(user)
+    return user
+
+
+def save_user(chat_id, user_details):
+    print("Saving user details .... ", chat_id)
+    if user_details:
+        return redis_handle.set(chat_id, json.dumps(user_details))
+    return False
+
+
+def delete_user(chat_id):
+    print("Deleting user ",chat_id)
+    resp = redis_handle.delete(chat_id)
+    if resp == 0:
+        print("no such user found")
+    else:
+        print("User Delete op is successful")
 
 
 def save_user_details(chat_id, dist, age, dose_type, isUpdate):
@@ -22,55 +50,6 @@ def save_user_details(chat_id, dist, age, dose_type, isUpdate):
 
     else:
         print('User details found in db')
-
-
-def save_user(chat_id, user_details):
-    with open('users.json', 'r+') as out:
-        data = get_data_from_file(out)
-
-        # print("all users: ", data)
-        data[str(chat_id)] = user_details
-        out.seek(0)
-        out.truncate()
-        # print('saving: ', data)
-        out.write(json.dumps(data))
-    print("User details saved....")
-
-
-def get_user(chat_id):
-    with open('users.json', 'r') as f:
-        data = get_data_from_file(f)
-
-        if str(chat_id) in data:
-            print('User found...')
-            return data[str(chat_id)]
-        else:
-            print('User not found...')
-            return None
-
-
-def delete_user(chat_id):
-    with open('users.json', 'r+') as f:
-        data = get_data_from_file(f)
-
-        if str(chat_id) in data:
-            data.pop(str(chat_id))
-            f.seek(0)
-            f.truncate()
-            f.write(json.dumps(data))
-            print('User deleted')
-            return True
-        else:
-            print('User not found...')
-            return False
-
-
-def get_data_from_file(file):
-    try:
-        data = json.loads(file.read())
-    except JSONDecodeError:
-        data = {}
-    return data
 
 
 def validate_dist(dist_name):
