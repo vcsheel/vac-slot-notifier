@@ -29,8 +29,10 @@ def delete_user(chat_id):
     resp = redis_handle.delete(chat_id)
     if resp == 0:
         print("no such user found")
+        return False
     else:
         print("User Delete op is successful")
+        return True
 
 
 def get_all_user():
