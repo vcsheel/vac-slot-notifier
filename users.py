@@ -68,7 +68,7 @@ def save_user_details(chat_id, dist, age, dose_type, isUpdate):
 
 def validate_dist(dist_name):
     try:
-        return cons.district_map[dist_name.lower()]
+        return cons.district_map[dist_name.strip().lower()]
     except:
         return False
 

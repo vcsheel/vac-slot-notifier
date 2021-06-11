@@ -111,9 +111,8 @@ def pause_notifier(message):
 def add_to_user_dists(message):
     user = get_user(message.chat.id)
     if user is not None:
-        try:
-            new_dist_id = cons.district_map[message.text.lower()]
-        except:
+        new_dist_id = validate_dist(message.text)
+        if not new_dist_id:
             print("Invalid district entered")
             bot.send_message(message.chat.id, "Invalid district name")
             return
@@ -131,9 +130,8 @@ def add_to_user_dists(message):
 def remove_from_user_dists(message):
     user = get_user(message.chat.id)
     if user is not None:
-        try:
-            new_dist_id = cons.district_map[message.text.lower()]
-        except:
+        new_dist_id = validate_dist(message.text)
+        if not new_dist_id:
             print("Invalid district entered")
             bot.send_message(message.chat.id, "Invalid district name")
             return
@@ -160,7 +158,7 @@ def delete_user_handle(message):
 
 
 def dist_handler(message, isUpdate):
-    user_details = message.text.split(',')
+    user_details = [x.strip() for x in message.text.split(',')]
     if len(user_details) < 3:
         bot.send_message(message.chat.id, "Invalid Entry, /start again")
     else:
