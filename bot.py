@@ -378,7 +378,7 @@ def start_threads():
         thread.join()
 
 
-@tl.job(interval=timedelta(seconds=60))
+@tl.job(interval=timedelta(seconds=120))
 def check_every_minute():
     print('Starting new slot check at : ', datetime.now())
     start_threads()
