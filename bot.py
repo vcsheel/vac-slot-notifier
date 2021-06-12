@@ -29,7 +29,7 @@ def help_menu(message):
     bot.send_message(message.chat.id, show_help_message())
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['/check'])
 def start(message):
     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
     bot.register_next_step_handler(sent_msg, dist_handler, False)
@@ -215,8 +215,8 @@ def get_available_slots_for_thread(chat_id, dist_id, dose_type, age, check_date)
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         # bot.send_message(id, "No slots found")
 
-
 #################################
+
 
 def create_reply_keyboard(data):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -263,7 +263,7 @@ def handle_cancel(message):
     bot.send_message(message.chat.id, "Operation cancelled", reply_markup=types.ReplyKeyboardRemove())
 
 
-@bot.message_handler(commands=['key'])
+@bot.message_handler(commands=['register'])
 def handle_start(message):
     send_stepper_msg(message.chat.id, age_group_text, age_groups, some_state_handler)
 
@@ -341,8 +341,7 @@ def new_dist_handler(chat_id, age_group, dist, dose_type):
 
     print("Finally....", age, dose_type, dist_id)
     save_user_details(chat_id, dist, age, dose_type, False)
-    check_date = get_date()
-    get_available_slots(chat_id, [dist_id], dose_type, age, check_date)
+    get_available_slots(chat_id, [dist_id], dose_type, age, get_date())
 
 
 my_states = set()
@@ -363,7 +362,6 @@ def init_states():
 
 
 #####################################################
-
 
 
 # Threads to check and notify every minute for slots
