@@ -127,8 +127,8 @@ def pincode_handler(message):
         bot.send_message(message.chat.id, "Invalid Entry, /find_by_pin again")
     else:
         age, pin, dose_type, check_date = populate_user_details(user_details)
-        pin = validate_pin(pin)
-        if not pin:
+
+        if not validate_pin(pin):
             bot.send_message(message.chat.id, "Invalid pincode")
             return
 
