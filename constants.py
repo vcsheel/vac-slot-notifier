@@ -15,6 +15,17 @@ headers = {"Host": "cdn-api.co-vin.in",
 
 HOST_URL = 'https://vac-slot-notifier.herokuapp.com/'
 
+command_list = ["start - Stars your slot checking process",
+                "update - Update your details",
+                "delete - Delete you saved data",
+                "slots - Get slots for next 7 days",
+                "add_district - Add a district to your list",
+                "remove_district - Remove a district from your list",
+                "my_details - View your details",
+                "subscribe - Subscribe for notifications every minute",
+                "unsubscribe - Stop notifications"
+                ]
+
 district_map = {
     "adilabad": 582,
     "agar": 320,

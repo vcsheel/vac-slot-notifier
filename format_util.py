@@ -31,13 +31,8 @@ def format_user_details(user):
 
 def show_help_message():
     message = "I can help you look for a  slot and notify you whenever it's available\n"
-    message += "You can use following commands - \n"
-    message += "/start - Stars your slot checking process\n"
-    message += "/update - Update your details\n"
-    message += "/slots - Get slots for next 7 days\n"
-    message += "/add_district - Add a district to your list\n"
-    message += "/remove_district - Remove a district from your list\n"
-    message += "/my_details - View your details\n"
-    message += "/subscribe - Subscribe for notifications every minute\n"
-    message += "/unsubscribe - Stop notifications\n"
+    message += "You can use following commands - \n\n"
+
+    for cmd in cons.command_list:
+        message += '/' + cmd + '\n'
     return message
