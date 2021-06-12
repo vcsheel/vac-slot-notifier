@@ -135,7 +135,7 @@ def pincode_handler(message):
         # save/update user
         # save_user_details(message.chat.id, dist, age, dose_type, isUpdate)
         # if not isUpdate:
-        get_available_slots(message.chat.id, [pin], dose_type, age, check_date)
+        get_available_pincode_slots(message.chat.id, [pin], dose_type, age, check_date)
         # else:
         #     bot.send_message(message.chat.id, "Your preference have been updated - check /my_details")
 
