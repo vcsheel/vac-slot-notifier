@@ -9,8 +9,8 @@ def format_message(resp, dose_type):
         for center in centers:
             message += "\n<pre><code>"
             message += center['center_name'] + ", " + center['district'] + '\n'
-            message += center['vaccine'] + center['fee_type'] + '\n'
-            message += " Dose " + str(dose_type) + " : " + str(center[cons.doses[dose_type]])
+            message += center['vaccine'] + " - " + center['fee_type'] + '\n'
+            message += "Dose " + str(dose_type) + " : " + str(center[cons.doses[dose_type]])
             message += "</code></pre>\n"
 
     message += '\n <b>Visit</b> <a href="' + cons.cowin_register_url + '"> CoWIN </a> <b>portal to register</b>'
