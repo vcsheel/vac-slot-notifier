@@ -123,7 +123,7 @@ def add_to_user_dists(message):
             return
 
         if len(user['dist_id']) >= 2:
-            bot.send_message("You can add only 2 district max")
+            bot.send_message(message.chat.id, "You can add only 2 district max")
             return
 
         if new_dist_id not in user['dist_id']:
