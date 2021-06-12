@@ -6,6 +6,8 @@ import flask
 import telebot
 from flask import Flask
 from timeloop import Timeloop
+from states import states
+from telebot import types
 
 from utils import *
 from users import *
@@ -214,6 +216,156 @@ def get_available_slots_for_thread(chat_id, dist_id, dose_type, age, check_date)
         # bot.send_message(id, "No slots found")
 
 
+#################################
+
+def create_reply_keyboard(data):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    buttons = []
+    for key in data:
+        buttons.append(types.KeyboardButton(text=key))
+    keyboard.add(*buttons)
+    return keyboard
+
+
+def validate_input(user_input, expected):
+    if user_input not in expected:
+        return False
+    else:
+        return True
+
+
+def wrong_input_message(chat_id):
+    bot.send_message(chat_id, 'Wrong input..., Try again or /cancel to abort')
+
+
+def get_dist_for_state(state):
+    dists = []
+    for i in states:
+        if i['state_name'] == state:
+            dists.append(i['district_name'])
+    return sorted(dists)
+
+
+def send_stepper_msg(chat_id, text, keyboard, state_handler, *arg):
+    sent_msg = bot.send_message(chat_id, text, reply_markup=create_reply_keyboard(keyboard))
+    bot.register_next_step_handler(sent_msg, state_handler, *arg)
+
+
+def isCancel(msg):
+    if msg == '/cancel':
+        return True
+    else:
+        return False
+
+
+@bot.message_handler(commands=['cancel'])
+def handle_cancel(message):
+    bot.send_message(message.chat.id, "Operation cancelled", reply_markup=types.ReplyKeyboardRemove())
+
+
+@bot.message_handler(commands=['key'])
+def handle_start(message):
+    send_stepper_msg(message.chat.id, age_group_text, age_groups, some_state_handler)
+
+
+def some_state_handler(message):
+    if isCancel(message.text):
+        handle_cancel(message)
+        return
+
+    age_group = message.text
+    if validate_input(age_group, age_groups):
+        send_stepper_msg(message.chat.id, state_text, all_states, some_dist_handler, age_group)
+    else:
+        wrong_input_message(message.chat.id)
+        send_stepper_msg(message.chat.id, age_group_text, age_groups, some_state_handler)
+
+
+def some_dist_handler(message, age_group):
+    if isCancel(message.text):
+        handle_cancel(message)
+        return
+    state = message.text
+    if validate_input(state, all_states):
+        dists = get_dist_for_state(state)
+        send_stepper_msg(message.chat.id, dist_text, dists, dose_handler, age_group, state, dists)
+
+    else:
+        wrong_input_message(message.chat.id)
+        send_stepper_msg(message.chat.id, state_text, all_states, some_dist_handler, age_group)
+
+
+def dose_handler(message, age_group, state, dists):
+    if isCancel(message.text):
+        handle_cancel(message)
+        return
+    dist = message.text
+
+    if validate_input(dist, dists):
+        send_stepper_msg(message.chat.id, dose_text, dose_types, final_handler, age_group, dist)
+    else:
+        wrong_input_message(message.chat.id)
+        send_stepper_msg(message.chat.id, dist_text, dists, dose_handler, age_group, state, dists)
+
+
+def final_handler(message, age_group, dist):
+    if isCancel(message.text):
+        handle_cancel(message)
+        return
+
+    dose_type = message.text
+    if validate_input(dose_type, dose_types):
+        print(message.text, age_group, dist)
+        bot.send_message(message.chat.id, "Your input saved, checking for slots...",
+                         reply_markup=types.ReplyKeyboardRemove())
+
+        new_dist_handler(message.chat.id, age_group, dist, dose_type)
+        bot.send_message(message.chat.id, "You can /subscribe for getting slot notification")
+    else:
+        wrong_input_message(message.chat.id)
+        send_stepper_msg(message.chat.id, dose_text, dose_types, final_handler, age_group, dist)
+
+
+def new_dist_handler(chat_id, age_group, dist, dose_type):
+    if age_group == age_groups[0]:
+        age = 18
+    else:
+        age = 45
+
+    dist_id = validate_dist(dist)
+
+    if dose_type == dose_types[0]:
+        dose_type = 1
+    else:
+        dose_type = 2
+
+    print("Finally....", age, dose_type, dist_id)
+    save_user_details(chat_id, dist, age, dose_type, False)
+    check_date = get_date()
+    get_available_slots(chat_id, [dist_id], dose_type, age, check_date)
+
+
+my_states = set()
+all_states = list()
+age_groups = ['18-44', '45+']
+dose_types = ['Dose 1', 'Dose 2']
+age_group_text = "Select your age group"
+state_text = "Select your state"
+dist_text = "Select your district"
+dose_text = "Select your dose type"
+
+
+def init_states():
+    for i in states:
+        my_states.add(i['state_name'])
+    global all_states
+    all_states = sorted(list(my_states))
+
+
+#####################################################
+
+
+
 # Threads to check and notify every minute for slots
 def start_threads():
     users = get_all_user()
@@ -243,6 +395,7 @@ def getMessage():
 
 
 if __name__ == "__main__":
+    init_states()
     tl.start()
     print("Slot notifier started.............!!!")
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
