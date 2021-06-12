@@ -22,6 +22,11 @@ bot.set_webhook(url=WEBHOOK_URL)
 tl = Timeloop()
 
 
+@bot.message_handler(commands=['help'])
+def help_menu(message):
+    bot.send_message(message.chat.id, show_help_message())
+
+
 @bot.message_handler(commands=['start'])
 def start(message):
     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
@@ -115,6 +120,10 @@ def add_to_user_dists(message):
         if not new_dist_id:
             print("Invalid district entered")
             bot.send_message(message.chat.id, "Invalid district name")
+            return
+
+        if len(user['dist_id']) >= 2:
+            bot.send_message("You can add only 2 district max")
             return
 
         if new_dist_id not in user['dist_id']:
