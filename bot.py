@@ -29,7 +29,7 @@ def help_menu(message):
     bot.send_message(message.chat.id, show_help_message())
 
 
-@bot.message_handler(commands=['check'])
+@bot.message_handler(commands=['register'])
 def start(message):
     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
     bot.register_next_step_handler(sent_msg, dist_handler, False)
@@ -302,7 +302,7 @@ def handle_cancel(message):
     bot.send_message(message.chat.id, "Operation cancelled", reply_markup=types.ReplyKeyboardRemove())
 
 
-@bot.message_handler(commands=['register'])
+@bot.message_handler(commands=['check'])
 def handle_start(message):
     send_stepper_msg(message.chat.id, age_group_text, age_groups, some_state_handler)
 
