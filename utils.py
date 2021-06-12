@@ -24,6 +24,27 @@ def get_next7days_by_district(dist_ids, date):
     return data
 
 
+def get_next7days_by_pin(pincodes, date):
+    url = constants.calendarByPin_url
+    # headers = {'Origin': 'https://apisetu.gov.in'}
+    data = {}
+
+    for pin in pincodes:
+        payload = {'pincode': pin, 'date': date}
+        response = requests.get(url, headers=constants.headers, params=payload)
+        # print(response.request.headers)
+        print(response.url)
+        if response.status_code == 200:
+            try:
+                data['centers'].extend(response.json()['centers'])
+            except:
+                data = response.json()
+        else:
+            print(response.json())
+
+    return data
+
+
 # get_next7days_by_district(581, "12-06-2021")
 def create_resp_session(session, center):
     resp = dict()

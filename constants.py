@@ -1,4 +1,5 @@
 calendarByDistrict_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict"
+calendarByPin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
 cowin_register_url = "https://selfregistration.cowin.gov.in/"
 
 doses = {1: 'available_capacity_dose1', 2: 'available_capacity_dose2'}

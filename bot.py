@@ -115,6 +115,31 @@ def pause_notifier(message):
         return
 
 
+@bot.message_handler(commands=['find_by_pin'])
+def get_slot_for_pin(message):
+    sent_msg = bot.send_message(message.chat.id, "Enter your age, pincode, dose number (1 or 2) separated by comma")
+    bot.register_next_step_handler(sent_msg, pincode_handler)
+
+
+def pincode_handler(message):
+    user_details = [x.strip() for x in message.text.split(',')]
+    if len(user_details) < 3:
+        bot.send_message(message.chat.id, "Invalid Entry, /find_by_pin again")
+    else:
+        age, pin, dose_type, check_date = populate_user_details(user_details)
+        pin = validate_pin(pin)
+        if not pin:
+            bot.send_message(message.chat.id, "Invalid pincode")
+            return
+
+        # save/update user
+        # save_user_details(message.chat.id, dist, age, dose_type, isUpdate)
+        # if not isUpdate:
+        get_available_slots(message.chat.id, [pin], dose_type, age, check_date)
+        # else:
+        #     bot.send_message(message.chat.id, "Your preference have been updated - check /my_details")
+
+
 def add_to_user_dists(message):
     user = get_user(message.chat.id)
     if user is not None:
@@ -185,6 +210,20 @@ def dist_handler(message, isUpdate):
             get_available_slots(message.chat.id, [dist_id], dose_type, age, check_date)
         else:
             bot.send_message(message.chat.id, "Your preference have been updated - check /my_details")
+
+
+def get_available_pincode_slots(chat_id, pincodes, dose_type, age, check_date):
+    data = get_next7days_by_pin(pincodes, check_date)
+    resp = None
+    if data is not None:
+        resp = get_availability_from_data(data, dose_type, age)
+    # print(resp)
+    if resp is not None and len(resp) > 0:
+        print('Slots found for ', chat_id, ' for total ', len(resp), ' days')
+        bot.send_message(chat_id, text=format_message(resp, dose_type), parse_mode="HTML")
+    else:
+        print('No slots found for ', chat_id, "on next 7 days of ", check_date)
+        bot.send_message(chat_id, "No slots found")
 
 
 def get_available_slots(chat_id, dist_id, dose_type, age, check_date):

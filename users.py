@@ -73,6 +73,13 @@ def validate_dist(dist_name):
         return False
 
 
+def validate_pin(pin):
+    if len(pin) == 6:
+        return True
+    else:
+        return False
+
+
 def get_date():
     return date.today().strftime("%d-%m-%Y")
 
