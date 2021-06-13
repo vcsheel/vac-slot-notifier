@@ -107,8 +107,8 @@ def save_user_pref(chat_id, age, vaccine, dose, fee_type):
     if user is None:
         user = {'dist_id': [], 'pincodes': [], 'notify': True}
 
-    user['age'] = int(age)
-    user['dose_type'] = int(dose)
+    user['age'] = int(age) if age else None
+    user['dose_type'] = int(dose) if dose else None
     user['vaccine'] = vaccine
     user['fee_type'] = fee_type
     user['check_date'] = None
