@@ -11,6 +11,7 @@ def format_message(resp):
             message += center['center_name'] + ", " + center['district'] + '\n'
             message += center['vaccine'] + " - " + center['fee_type'] + '\n'
             message += "Dose 1" + " : " + str(center[cons.doses[1]])
+            message += " | "
             message += "Dose 2" + " : " + str(center[cons.doses[2]])
             message += "</code></pre>\n"
 
