@@ -17,13 +17,17 @@ def format_message(resp, dose_type):
     return message
 
 
+def safe_str_conversion(text):
+    return str(text if text else 'Any')
+
+
 ## {"dist_id": ["hyderabad", "rangareddy"], "age": 23, "dose_type": 2}
 def format_user_details(user):
     message = "<b> Your saved choice: </b>\n\n"
-    message += "- Age : " + str(user['age']) + '\n'
-    message += "- Vaccine: " + str(user['vaccine']) + '\n'
-    message += "- Fee: " + str(user['fee_type']) + '\n'
-    message += "- Dose : " + str(user['dose_type']) + '\n'
+    message += "- Age : " + safe_str_conversion(user['age']) + '\n'
+    message += "- Vaccine: " + safe_str_conversion(user['vaccine']) + '\n'
+    message += "- Fee: " + safe_str_conversion(user['fee_type']) + '\n'
+    message += "- Dose : " + safe_str_conversion(user['dose_type']) + '\n'
     message += "- Notify for slots : " + str(user['notify']) + '\n'
     message += "- District(s) : "
     dists = ", ".join(user['dist_id'])
