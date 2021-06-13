@@ -65,8 +65,7 @@ def add_dist_input(message):
 def get_user_saved_details(message):
     user = get_user(message.chat.id)
     if user is not None:
-        subs = {v: k for k, v in cons.district_map.items()}
-        user['dist_id'] = [subs.get(item) for item in user['dist_id']]
+        user['dist_id'] = [map_reverse(cons.district_map).get(item) for item in user['dist_id']]
         bot.send_message(message.chat.id, format_user_details(user), parse_mode="HTML")
     else:
         bot.send_message(message.chat.id, "Your preference not saved, use /start to save")

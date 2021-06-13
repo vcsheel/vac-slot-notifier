@@ -1,4 +1,5 @@
 import constants as cons
+from utils import get_age_group_from_age
 
 
 def format_message(resp):
@@ -26,7 +27,7 @@ def safe_str_conversion(text):
 ## {"dist_id": ["hyderabad", "rangareddy"], "age": 23, "dose_type": 2}
 def format_user_details(user):
     message = "<b> Your saved choice: </b>\n\n"
-    message += "- Age : " + safe_str_conversion(user['age']) + '\n'
+    message += "- Age Group: " + get_age_group_from_age(user['age']) + '\n'
     message += "- Vaccine: " + safe_str_conversion(user['vaccine']) + '\n'
     message += "- Fee: " + safe_str_conversion(user['fee_type']) + '\n'
     message += "- Dose : " + safe_str_conversion(user['dose_type']) + '\n'

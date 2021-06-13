@@ -37,3 +37,16 @@ def filter_user_pref(user, fee_type, session):
     return filter_by_dose(user['dose_type'], session, user['min_slots']) and filter_by_age(user['age'], session[
         "min_age_limit"]) and filter_by_fee(user['fee_type'], fee_type) and filter_by_vaccine(user['vaccine'],
                                                                                               session['vaccine'])
+
+
+def map_reverse(obj):
+    return {v: k for k, v in obj.items()}
+
+
+def get_age_group_from_age(age):
+    if age >= 45:
+        return '45+'
+    elif 18 <= age < 45:
+        return '18-44'
+    else:
+        return None
