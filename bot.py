@@ -213,7 +213,7 @@ def dist_handler(message, isUpdate):
         user = save_user_details(message.chat.id, dist, age, dose_type, isUpdate)
         if not isUpdate:
             user = populate_pref_fields()
-            user['dist_id'] = [dist]
+            user['dist_id'] = [dist_id]
             user['age'] = age
             user['dose_type'] = dose_type
             get_available_slots(message.chat.id, user, check_date)
@@ -387,7 +387,7 @@ def new_dist_handler(chat_id, age_group, dist, dose_type):
     user = save_user_details(chat_id, dist, age, dose_type, False)
     # TODO => Remove with better logic
     user = populate_pref_fields()
-    user['dist_id'] = [dist]
+    user['dist_id'] = [dist_id]
     user['age'] = age
     user['dose_type'] = dose_type
 
