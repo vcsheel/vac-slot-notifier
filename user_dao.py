@@ -89,7 +89,7 @@ def save_user_details(chat_id, dist, age, dose_type, isUpdate):
 
     if user and not isUpdate:
         print('User details found in db')
-        return
+        return user
 
     if not user:
         user = populate_pref_fields()
