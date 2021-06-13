@@ -9,8 +9,8 @@ from timeloop import Timeloop
 from states import states
 from telebot import types
 
-from utils import *
-from users import *
+from rest import *
+from user_dao import *
 from format_util import *
 
 my_secret = os.environ['API_KEY']
@@ -29,7 +29,7 @@ def help_menu(message):
     bot.send_message(message.chat.id, show_help_message())
 
 
-@bot.message_handler(commands=['register'])
+@bot.message_handler(commands=['start'])
 def start(message):
     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
     bot.register_next_step_handler(sent_msg, dist_handler, False)

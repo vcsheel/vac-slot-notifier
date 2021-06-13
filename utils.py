@@ -1,77 +1,39 @@
-import requests
-import json
-import constants
+import constants as cons
 
 
-def get_next7days_by_district(dist_ids, date):
-    url = constants.calendarByDistrict_url
-    # headers = {'Origin': 'https://apisetu.gov.in'}
-    data = {}
-
-    for dist_id in dist_ids:
-        payload = {'district_id': dist_id, 'date': date}
-        response = requests.get(url, headers=constants.headers, params=payload)
-        # print(response.request.headers)
-        print(response.url)
-        if response.status_code == 200:
-            try:
-                data['centers'].extend(response.json()['centers'])
-            except:
-                data = response.json()
-        else:
-            print(response.json())
-
-    return data
-
-
-def get_next7days_by_pin(pincodes, date):
-    url = constants.calendarByPin_url
-    # headers = {'Origin': 'https://apisetu.gov.in'}
-    data = {}
-
-    for pin in pincodes:
-        payload = {'pincode': pin, 'date': date}
-        response = requests.get(url, headers=constants.headers, params=payload)
-        # print(response.request.headers)
-        print(response.url)
-        if response.status_code == 200:
-            try:
-                data['centers'].extend(response.json()['centers'])
-            except:
-                data = response.json()
-        else:
-            print(response.json())
-
-    return data
-
-
-# get_next7days_by_district(581, "12-06-2021")
-def create_resp_session(session, center):
-    resp = dict()
-    resp['center_name'] = center['name']
-    resp['fee_type'] = center['fee_type']
-    resp['district'] = center['district_name']
-    # resp['min_age_limit'] = session['min_age_limit']
-    resp['vaccine'] = session['vaccine']
-    resp['available_capacity_dose1'] = session['available_capacity_dose1']
-    resp['available_capacity_dose2'] = session['available_capacity_dose2']
-    return resp
-
-
-def get_availability_from_data(data, dose_type, age):
-    response = {}
-    if data:
-        for center in data['centers']:
-            for session in center['sessions']:
-                if int(session[constants.doses[dose_type]]) > 0 and age >= int(session["min_age_limit"]):
-                    # print(session[doses[dose_type]])
-                    date = session['date']
-                    resp = create_resp_session(session, center)
-                    if date not in response:
-                        response[date] = [resp]
-                    else:
-                        response[date].append(resp)
+def filter_by_age(age, session_min_age_limit):
+    if age is None:
+        return True
+    elif 18 <= int(age) < 45 and session_min_age_limit == 18:
+        return True
+    elif int(age) >= 45 and session_min_age_limit == 45:
+        return True
     else:
-        print("Received empty data")
-    # print(response)
-    return response
+        return False
+
+
+def filter_by_fee(fee, session_fee):
+    if fee is None:
+        return True
+    else:
+        return fee == session_fee
+
+
+def filter_by_dose(dose_type, session, min_available=1):
+    if dose_type is None:
+        return session['available_capacity'] >= min_available
+    else:
+        return int(session[cons.doses[dose_type]]) >= min_available
+
+
+def filter_by_vaccine(vaccine, session_vaccine):
+    if vaccine is None:
+        return True
+    else:
+        return vaccine == session_vaccine
+
+
+def filter_user_pref(user, fee_type, session):
+    return filter_by_dose(user['dose_type'], session, user['min_available']) and filter_by_age(user['age'], session[
+        "min_age_limit"]) and filter_by_fee(user['fee'], fee_type) and filter_by_vaccine(user['vaccine'],
+                                                                                         session['vaccine'])

@@ -16,7 +16,7 @@ headers = {"Host": "cdn-api.co-vin.in",
 
 HOST_URL = 'https://vac-slot-notifier.herokuapp.com/'
 
-command_list = ["register - Register your preferences",
+command_list = ["start - Register your preferences",
                 "subscribe - Subscribe for notifications every minute",
                 "unsubscribe - Stop notifications",
                 "update - Update your details",
