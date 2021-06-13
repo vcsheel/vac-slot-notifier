@@ -46,30 +46,30 @@ def get_all_user():
     return dict(zip(keys, val))
 
 
-def migrate_db():
-    print("------------------------------------------")
-    print("Starting migration....")
-    print("------------------------------------------")
-    keys = redis_handle.keys()
-    keys = [json.loads(x) for x in keys]
-
-    for i in keys:
-        print("Migrating user ----------- ", i)
-        user = get_user(i)
-        print("Before migration: ", user)
-
-        user['pincodes'] = []
-        user['fee_type'] = None
-        user['vaccine'] = None
-        user['min_slots'] = 1
-        user['check_date'] = None
-
-        redis_handle.set(i, json.dumps(user))
-        print("Migration complete for user.... ", i)
-        print("After migrating: ", get_user(i))
-    print("------------------------------------------")
-    print("Migration completed for all")
-    print("------------------------------------------")
+# def migrate_db():
+#     print("------------------------------------------")
+#     print("Starting migration....")
+#     print("------------------------------------------")
+#     keys = redis_handle.keys()
+#     keys = [json.loads(x) for x in keys]
+#
+#     for i in keys:
+#         print("Migrating user ----------- ", i)
+#         user = get_user(i)
+#         print("Before migration: ", user)
+#
+#         user['pincodes'] = []
+#         user['fee_type'] = None
+#         user['vaccine'] = None
+#         user['min_slots'] = 1
+#         user['check_date'] = None
+#
+#         redis_handle.set(i, json.dumps(user))
+#         print("Migration complete for user.... ", i)
+#         print("After migrating: ", get_user(i))
+#     print("------------------------------------------")
+#     print("Migration completed for all")
+#     print("------------------------------------------")
 
 
 def save_user_details(chat_id, dist, age, dose_type, isUpdate):
