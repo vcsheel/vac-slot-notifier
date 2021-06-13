@@ -49,4 +49,4 @@ def get_age_group_from_age(age):
     elif 18 <= age < 45:
         return '18-44'
     else:
-        return None
+        return 'Any'
