@@ -56,6 +56,7 @@ def add_dist_input(message):
     else:
         bot.send_message(message.chat.id, "User not found, please register using /start")
 
+
 @bot.message_handler(commands=['remove_district'])
 def add_dist_input(message):
     sent_msg = bot.send_message(message.chat.id, "Enter district name")
@@ -153,7 +154,7 @@ def add_to_user_dists(message):
     state = message.text
     if validate_input(state, all_states):
         dists = get_dist_for_state(state)
-        send_stepper_msg(message.chat.id, dist_text, dists, dist_add_hanndler, dists)
+        send_stepper_msg(message.chat.id, dist_text, dists, dist_add_handler, dists)
 
     else:
         wrong_input_message(message.chat.id)
