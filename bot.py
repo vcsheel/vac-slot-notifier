@@ -433,6 +433,7 @@ def getMessage():
 
 if __name__ == "__main__":
     init_states()
+    migrate_db()
     tl.start()
     print("Slot notifier started.............!!!")
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
