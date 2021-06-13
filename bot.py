@@ -59,8 +59,10 @@ def add_dist_input(message):
 
 @bot.message_handler(commands=['remove_district'])
 def add_dist_input(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter district name")
-    bot.register_next_step_handler(sent_msg, remove_from_user_dists)
+    user = get_user(message.chat.id)
+    if user:
+        dists = [map_reverse(cons.district_map).get(item) for item in user['dist_id']]
+        send_stepper_msg(message.chat.id, "Select the entry which you want to remove", dists, remove_from_user_dists, dists)
 
 
 @bot.message_handler(commands=['my_details'])
@@ -190,19 +192,15 @@ def dist_add_handler(message, dists):
         send_stepper_msg(message.chat.id, dist_text, dists, dist_add_handler, dists)
 
 
-def remove_from_user_dists(message):
+def remove_from_user_dists(message, dists):
     user = get_user(message.chat.id)
     if user is not None:
-        new_dist_id = validate_dist(message.text)
-        if not new_dist_id:
-            print("Invalid district entered")
-            bot.send_message(message.chat.id, "Invalid district name")
-            return
+        selected_item = message.text
 
-        if new_dist_id not in user['dist_id']:
+        if selected_item not in dists:
             bot.send_message(message.chat.id, "District not in your saved list")
         else:
-            user['dist_id'].remove(new_dist_id)
+            user['dist_id'].remove(validate_dist(selected_item))
             save_user(message.chat.id, user)
             bot.send_message(message.chat.id, "Removed from your list")
     else:
