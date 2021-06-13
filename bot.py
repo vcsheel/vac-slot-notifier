@@ -336,7 +336,7 @@ def handle_cancel(message):
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     help_menu(message)
-    bot.send_message("Please enter your search details to get started!!!")
+    bot.send_message(message.chat.id, "Please enter your search details to get started!!!")
     send_stepper_msg(message.chat.id, age_group_text, age_groups.keys(), some_state_handler)
 
 
