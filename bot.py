@@ -51,9 +51,10 @@ def delete_user_config(message):
 
 @bot.message_handler(commands=['add_district'])
 def add_dist_input(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter district name")
-    bot.register_next_step_handler(sent_msg, add_to_user_dists)
-
+    if get_user(message.chat.id):
+        send_stepper_msg(message.chat.id, state_text, all_states, add_to_user_dists)
+    else:
+        bot.send_message(message.chat.id, "User not found, please register using /start")
 
 @bot.message_handler(commands=['remove_district'])
 def add_dist_input(message):
@@ -146,26 +147,46 @@ def pincode_handler(message):
 
 
 def add_to_user_dists(message):
-    user = get_user(message.chat.id)
-    if user is not None:
-        new_dist_id = validate_dist(message.text)
-        if not new_dist_id:
-            print("Invalid district entered")
-            bot.send_message(message.chat.id, "Invalid district name")
-            return
+    if isCancel(message.text):
+        handle_cancel(message)
+        return
+    state = message.text
+    if validate_input(state, all_states):
+        dists = get_dist_for_state(state)
+        send_stepper_msg(message.chat.id, dist_text, dists, dist_add_hanndler, dists)
 
-        if len(user['dist_id']) >= 2:
-            bot.send_message(message.chat.id, "You can add only 2 district max")
-            return
-
-        if new_dist_id not in user['dist_id']:
-            user['dist_id'].append(new_dist_id)
-            save_user(message.chat.id, user)
-            bot.send_message(message.chat.id, "Saved to your list")
-        else:
-            bot.send_message(message.chat.id, "District already saved in your list")
     else:
-        bot.send_message(message.chat.id, "User not found, please register using /start")
+        wrong_input_message(message.chat.id)
+        send_stepper_msg(message.chat.id, state_text, all_states, add_to_user_dists)
+
+
+def dist_add_handler(message, dists):
+    if isCancel(message.text):
+        handle_cancel(message)
+        return
+    dist = message.text
+
+    if validate_input(dist, dists):
+        ## add dist to user dist
+        user = get_user(message.chat.id)
+        if user is not None:
+            new_dist_id = validate_dist(dist)
+
+            if len(user['dist_id']) >= 2:
+                bot.send_message(message.chat.id, "You can add only 2 district max")
+                return
+
+            if new_dist_id not in user['dist_id']:
+                user['dist_id'].append(new_dist_id)
+                save_user(message.chat.id, user)
+                bot.send_message(message.chat.id, "Saved to your list")
+            else:
+                bot.send_message(message.chat.id, "District already saved in your list")
+        else:
+            bot.send_message(message.chat.id, "User not found, please register using /start")
+    else:
+        wrong_input_message(message.chat.id)
+        send_stepper_msg(message.chat.id, dist_text, dists, dist_add_handler, dists)
 
 
 def remove_from_user_dists(message):
