@@ -79,7 +79,7 @@ def populate_pref_fields():
     user['fee_type'] = None
     user['check_date'] = None
     user['min_slots'] = 1
-    user['notify'] = False
+    user['notify'] = True
 
     return user
 

@@ -176,17 +176,17 @@ def dist_add_handler(message, dists):
             new_dist_id = validate_dist(dist)
 
             if len(user['dist_id']) >= 2:
-                bot.send_message(message.chat.id, "You can add only 2 district max")
+                bot.send_message(message.chat.id, "You can add only 2 district max", reply_markup=types.ReplyKeyboardRemove())
                 return
 
             if new_dist_id not in user['dist_id']:
                 user['dist_id'].append(new_dist_id)
                 save_user(message.chat.id, user)
-                bot.send_message(message.chat.id, "Saved to your list")
+                bot.send_message(message.chat.id, "Saved to your list", reply_markup=types.ReplyKeyboardRemove())
             else:
-                bot.send_message(message.chat.id, "District already saved in your list")
+                bot.send_message(message.chat.id, "District already saved in your list", reply_markup=types.ReplyKeyboardRemove())
         else:
-            bot.send_message(message.chat.id, "User not found, please register using /start")
+            bot.send_message(message.chat.id, "User not found, please register using /start", reply_markup=types.ReplyKeyboardRemove())
     else:
         wrong_input_message(message.chat.id)
         send_stepper_msg(message.chat.id, dist_text, dists, dist_add_handler, dists)
@@ -198,13 +198,13 @@ def remove_from_user_dists(message, dists):
         selected_item = message.text
 
         if selected_item not in dists:
-            bot.send_message(message.chat.id, "District not in your saved list")
+            bot.send_message(message.chat.id, "District not in your saved list", reply_markup=types.ReplyKeyboardRemove())
         else:
             user['dist_id'].remove(validate_dist(selected_item))
             save_user(message.chat.id, user)
-            bot.send_message(message.chat.id, "Removed from your list")
+            bot.send_message(message.chat.id, "Removed from your list", reply_markup=types.ReplyKeyboardRemove())
     else:
-        bot.send_message(message.chat.id, "User not found, please register using /start")
+        bot.send_message(message.chat.id, "User not found, please register using /start", reply_markup=types.ReplyKeyboardRemove())
 
 
 def delete_user_handle(message):
