@@ -28,15 +28,16 @@ headers = {"Host": "cdn-api.co-vin.in",
 
 
 command_list = ["start - Register your preferences",
+                "filter - Add filters to your slot search (for eg. dose, vaccine, fee, age group)",
+                "slots - Get district slots for next 7 days",
+                "details - View your details"
                 "subscribe - Subscribe for notifications every minute",
                 "unsubscribe - Stop notifications",
-                "check - Check for slot",
+                "add - Add a district to your list",
+                "remove- Remove a district from your list",
+                "lookup - Quick check for slot",
                 "delete - Delete you saved data",
-                "slots - Get district slots for next 7 days",
                 "find_by_pin - Get pincode slots for next 7 days",
-                "add_district - Add a district to your list",
-                "remove_district - Remove a district from your list",
-                "my_details - View your details"
                 ]
 
 district_map = {

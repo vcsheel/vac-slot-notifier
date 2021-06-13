@@ -31,7 +31,7 @@ def help_menu(message):
     bot.send_message(message.chat.id, show_help_message())
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['lookup'])
 def start(message):
     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
     bot.register_next_step_handler(sent_msg, dist_handler, False)
@@ -49,7 +49,7 @@ def delete_user_config(message):
     bot.register_next_step_handler(sent_msg, delete_user_handle)
 
 
-@bot.message_handler(commands=['add_district'])
+@bot.message_handler(commands=['add'])
 def add_dist_input(message):
     if get_user(message.chat.id):
         send_stepper_msg(message.chat.id, state_text, all_states, add_to_user_dists)
@@ -57,7 +57,7 @@ def add_dist_input(message):
         bot.send_message(message.chat.id, "User not found, please register using /start")
 
 
-@bot.message_handler(commands=['remove_district'])
+@bot.message_handler(commands=['remove'])
 def add_dist_input(message):
     user = get_user(message.chat.id)
     if user:
@@ -65,7 +65,7 @@ def add_dist_input(message):
         send_stepper_msg(message.chat.id, "Select the entry which you want to remove", dists, remove_from_user_dists, dists)
 
 
-@bot.message_handler(commands=['my_details'])
+@bot.message_handler(commands=['details'])
 def get_user_saved_details(message):
     user = get_user(message.chat.id)
     if user is not None:
@@ -333,8 +333,10 @@ def handle_cancel(message):
     bot.send_message(message.chat.id, "Operation cancelled", reply_markup=types.ReplyKeyboardRemove())
 
 
-@bot.message_handler(commands=['check'])
+@bot.message_handler(commands=['start'])
 def handle_start(message):
+    help_menu()
+    bot.send_message("Please enter your search details to get started!!!")
     send_stepper_msg(message.chat.id, age_group_text, age_groups.keys(), some_state_handler)
 
 

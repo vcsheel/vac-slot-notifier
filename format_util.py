@@ -40,7 +40,7 @@ def format_user_details(user):
 
 
 def show_help_message():
-    message = "I can help you look for a  slot and notify you whenever it's available\n"
+    message = "Hi, I can help you look for a  slot and notify you whenever it's available\n"
     message += "You can use following commands - \n\n"
 
     for cmd in cons.command_list:
