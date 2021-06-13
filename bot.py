@@ -226,7 +226,7 @@ def get_available_pincode_slots(chat_id, user, check_date):
     # print(resp)
     if resp is not None and len(resp) > 0:
         print('Slots found for ', chat_id, ' for total ', len(resp), ' days')
-        bot.send_message(chat_id, text=format_message(resp, user['dose_type']), parse_mode="HTML")
+        bot.send_message(chat_id, text=format_message(resp), parse_mode="HTML")
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         bot.send_message(chat_id, "No slots found")
@@ -240,7 +240,7 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
     # print(resp)
     if resp is not None and len(resp) > 0:
         print('Slots found for ', chat_id, ' for total ', len(resp), ' days')
-        bot.send_message(chat_id, text=format_message(resp, user['dose_type']), parse_mode="HTML")
+        bot.send_message(chat_id, text=format_message(resp), parse_mode="HTML")
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         if not isThreaded:
