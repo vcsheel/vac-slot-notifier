@@ -6,6 +6,8 @@ import flask
 import telebot
 from flask import Flask
 from timeloop import Timeloop
+
+from constants import *
 from states import states
 from telebot import types
 
@@ -35,10 +37,10 @@ def start(message):
     bot.register_next_step_handler(sent_msg, dist_handler, False)
 
 
-@bot.message_handler(commands=['update'])
-def update_user_config(message):
-    sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
-    bot.register_next_step_handler(sent_msg, dist_handler, True)
+# @bot.message_handler(commands=['update'])
+# def update_user_config(message):
+#     sent_msg = bot.send_message(message.chat.id, "Enter your age, district, dose number (1 or 2) separated by comma")
+#     bot.register_next_step_handler(sent_msg, dist_handler, True)
 
 
 @bot.message_handler(commands=['delete'])
@@ -385,17 +387,6 @@ def new_dist_handler(chat_id, age_group, dist, dose_type):
 
 my_states = set()
 all_states = list()
-age_groups = {'18-44': 18, '45+': 45, 'Any': None}
-dose_types = {'Dose 1': 1, 'Dose 2': 2, 'Any': None}
-fee_types = {'Free': 'Free', 'Paid': 'Paid', 'Any': None}
-vaccine_types = {'COVISHIELD': 'COVISHIELD', 'COVAXIN': 'COVAXIN', 'SPUTNIK V': 'SPUTNIK V', 'Any': None}
-age_group_text = "Select your age group"
-state_text = "Select your state"
-dist_text = "Select your district"
-dose_text = "Select your dose type"
-fee_type_text = "Select your vaccine fee"
-vaccine_text = "Select your vaccine"
-min_slot_text = "Enter your minimum slot requirement"
 
 
 def init_states():

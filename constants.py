@@ -1,8 +1,20 @@
 calendarByDistrict_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict"
 calendarByPin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
 cowin_register_url = "https://selfregistration.cowin.gov.in/"
+HOST_URL = 'https://vac-slot-notifier.herokuapp.com/'
 
 doses = {1: 'available_capacity_dose1', 2: 'available_capacity_dose2'}
+age_groups = {'18-44': 18, '45+': 45, 'Any': None}
+dose_types = {'Dose 1': 1, 'Dose 2': 2, 'Any': None}
+fee_types = {'Free': 'Free', 'Paid': 'Paid', 'Any': None}
+vaccine_types = {'COVISHIELD': 'COVISHIELD', 'COVAXIN': 'COVAXIN', 'SPUTNIK V': 'SPUTNIK V', 'Any': None}
+age_group_text = "Select your age group"
+state_text = "Select your state"
+dist_text = "Select your district"
+dose_text = "Select your dose type"
+fee_type_text = "Select your vaccine fee"
+vaccine_text = "Select your vaccine"
+min_slot_text = "Enter your minimum slot requirement"
 
 headers = {"Host": "cdn-api.co-vin.in",
            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:89.0) Gecko/20100101 Firefox/89.0",
@@ -14,12 +26,10 @@ headers = {"Host": "cdn-api.co-vin.in",
            "Cache-Control": 'max-age=0',
            "TE": "Trailers"}
 
-HOST_URL = 'https://vac-slot-notifier.herokuapp.com/'
 
 command_list = ["start - Register your preferences",
                 "subscribe - Subscribe for notifications every minute",
                 "unsubscribe - Stop notifications",
-                "update - Update your details",
                 "check - Check for slot",
                 "delete - Delete you saved data",
                 "slots - Get district slots for next 7 days",
