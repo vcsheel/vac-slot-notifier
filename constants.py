@@ -30,7 +30,7 @@ headers = {"Host": "cdn-api.co-vin.in",
 command_list = ["start - Register your preferences",
                 "filter - Add filters to your slot search (for eg. dose, vaccine, fee, age group)",
                 "slots - Get district slots for next 7 days",
-                "details - View your details"
+                "details - View your details",
                 "subscribe - Subscribe for notifications every minute",
                 "unsubscribe - Stop notifications",
                 "add - Add a district to your list",
