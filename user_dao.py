@@ -72,24 +72,49 @@ def get_all_user():
 #     print("------------------------------------------")
 
 
+def populate_pref_fields():
+    user = dict()
+    user['pincodes'] = []
+    user['vaccine'] = None
+    user['fee_type'] = None
+    user['check_date'] = None
+    user['min_slots'] = 1
+    user['notify'] = False
+
+    return user
+
+
 def save_user_details(chat_id, dist, age, dose_type, isUpdate):
-    data = get_user(chat_id)
-    if data is None or isUpdate:
-        user_details = dict()
-        user_details['dist_id'] = [validate_dist(dist)]
-        user_details['age'] = int(age)
-        user_details['dose_type'] = int(dose_type)
+    user = get_user(chat_id)
 
-        try:
-            user_details['notify'] = data['notify']
-        except:
-            user_details['notify'] = False
-
-        print('Saving user details.... ', chat_id)
-        save_user(chat_id, user_details)
-
-    else:
+    if user and not isUpdate:
         print('User details found in db')
+        return
+
+    if not user:
+        user = populate_pref_fields()
+
+    user['dist_id'] = [validate_dist(dist)]
+    user['age'] = int(age)
+    user['dose_type'] = int(dose_type)
+    save_user(chat_id, user)
+    print('Saving user details - ', chat_id, ' - ', user)
+    return user
+
+
+def save_user_pref(chat_id, age, vaccine, dose, fee_type):
+    user = get_user(chat_id)
+    if user is None:
+        user = {'dist_id': [], 'pincodes': [], 'notify': True}
+
+    user['age'] = int(age)
+    user['dose_type'] = int(dose)
+    user['vaccine'] = vaccine
+    user['fee_type'] = fee_type
+    user['check_date'] = None
+    user['min_slots'] = 1
+    print('Updating filters for user ', chat_id)
+    save_user(chat_id, user)
 
 
 def validate_dist(dist_name):

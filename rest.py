@@ -59,12 +59,12 @@ def create_resp_session(session, center):
     return resp
 
 
-def get_availability_from_data(data, dose_type, age):
+def get_availability_from_data(data, user):
     response = {}
     if data:
         for center in data['centers']:
             for session in center['sessions']:
-                if filter_by_dose(dose_type, session) and filter_by_age(age, session["min_age_limit"]):
+                if filter_user_pref(user, center['fee_type'], session):
                     # print(session[doses[dose_type]])
                     date = session['date']
                     resp = create_resp_session(session, center)

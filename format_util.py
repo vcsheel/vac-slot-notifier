@@ -21,6 +21,8 @@ def format_message(resp, dose_type):
 def format_user_details(user):
     message = "<b> Your saved choice: </b>\n\n"
     message += "- Age : " + str(user['age']) + '\n'
+    message += "- Vaccine: " + user['vaccine'] + '\n'
+    message += "- Fee: " + str(user['fee_type']) + '\n'
     message += "- Dose : " + str(user['dose_type']) + '\n'
     message += "- Notify for slots : " + str(user['notify']) + '\n'
     message += "- District(s) : "

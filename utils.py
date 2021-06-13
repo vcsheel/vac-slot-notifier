@@ -34,6 +34,6 @@ def filter_by_vaccine(vaccine, session_vaccine):
 
 
 def filter_user_pref(user, fee_type, session):
-    return filter_by_dose(user['dose_type'], session, user['min_available']) and filter_by_age(user['age'], session[
-        "min_age_limit"]) and filter_by_fee(user['fee'], fee_type) and filter_by_vaccine(user['vaccine'],
-                                                                                         session['vaccine'])
+    return filter_by_dose(user['dose_type'], session, user['min_slots']) and filter_by_age(user['age'], session[
+        "min_age_limit"]) and filter_by_fee(user['fee_type'], fee_type) and filter_by_vaccine(user['vaccine'],
+                                                                                              session['vaccine'])
