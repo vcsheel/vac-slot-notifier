@@ -276,7 +276,7 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
                 bot.send_message(chat_id, "No slots found")
             except Exception as e:
                 print("User...exception while sending message", chat_id)
-                print(e)
+                print(e.args)
 
 # def get_available_slots_for_thread(chat_id, user, check_date):
 #     print('Checking availability for user ', chat_id)
