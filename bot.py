@@ -270,9 +270,21 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
         print('Slots found for ', chat_id, ' for total ', len(resp), ' days')
         response_text = format_message(resp)
         split_text = telebot.util.split_string(response_text, 3000)
-        for text in split_text:
+
+        # print("Split:", len(split_text))
+        for i in range(len(split_text)):
+            # print(i, "-", len(split_text[i]))
+            final_txt = split_text[i]
+            if i < len(split_text) - 1:
+                part = split_text[i].rpartition('</code></pre>\n')
+                # print(len(part[0]),part[1], len(part[2]))
+                # print('--------------')
+                split_text[i + 1] = part[2] + split_text[i + 1]
+                final_txt = part[0] + part[1]
+
             try:
-                bot.send_message(chat_id, text=text, parse_mode="HTML")
+                bot.send_message(id, text=final_txt, parse_mode="HTML")
+
             except ApiTelegramException as e:
                 print("User...exception while sending message", chat_id, " -- ", e)
                 process_error(e.result_json, chat_id)
