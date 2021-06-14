@@ -274,7 +274,7 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
                 bot.send_message(chat_id, text=text, parse_mode="HTML")
             except Exception as e:
                 print("User...exception while sending message", chat_id)
-                blocker_user_error(e, chat_id)
+                process_error(e, chat_id)
 
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
@@ -283,7 +283,7 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
                 bot.send_message(chat_id, "No slots found")
             except Exception as e:
                 print("User...exception while sending message", chat_id)
-                blocker_user_error(e, chat_id)
+                process_error(e, chat_id)
 
 # def get_available_slots_for_thread(chat_id, user, check_date):
 #     print('Checking availability for user ', chat_id)
