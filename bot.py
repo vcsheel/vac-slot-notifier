@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import flask
 import telebot
 from flask import Flask
+from telebot.apihelper import ApiTelegramException
 from timeloop import Timeloop
 
 from constants import *
@@ -272,9 +273,11 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
         for text in split_text:
             try:
                 bot.send_message(chat_id, text=text, parse_mode="HTML")
-            except Exception as e:
+            except ApiTelegramException as e:
                 print("User...exception while sending message", chat_id)
-                process_error(e, chat_id)
+                print(e.error_code)
+                print(e.result_json)
+                # process_error(e, chat_id)
 
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
