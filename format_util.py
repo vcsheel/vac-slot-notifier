@@ -9,7 +9,8 @@ def format_message(resp):
         message += "\n<b><ins>" + key_date + "</ins></b>\n"
         for center in centers:
             message += "\n<pre><code>"
-            message += center['center_name'] + ", " + center['district'] + '\n'
+            message += center['center_name'] + ", " + center['district'] + " - "
+            message += center['pincode'] + '\n'
             message += center['vaccine'] + " - " + center['fee_type'] + '\n'
             message += "Dose 1" + " : " + str(center[cons.doses[1]])
             message += " | "

@@ -1,10 +1,9 @@
 import json
 import os
-from datetime import date
 
 import redis
 
-import constants as cons
+from utils import validate_dist, get_date
 
 REDIS_URL = os.environ['REDIS_URL']
 redis_handle = redis.from_url(url=REDIS_URL)
@@ -115,24 +114,6 @@ def save_user_pref(chat_id, age, vaccine, dose, fee_type):
     user['min_slots'] = 1
     print('Updating filters for user ', chat_id)
     save_user(chat_id, user)
-
-
-def validate_dist(dist_name):
-    try:
-        return cons.district_map[dist_name.strip().lower()]
-    except:
-        return False
-
-
-def validate_pin(pin):
-    if len(pin) == 6:
-        return True
-    else:
-        return False
-
-
-def get_date():
-    return date.today().strftime("%d-%m-%Y")
 
 
 def populate_user_details(user_details):

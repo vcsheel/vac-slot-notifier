@@ -52,6 +52,7 @@ def create_resp_session(session, center):
     resp['center_name'] = center['name']
     resp['fee_type'] = center['fee_type']
     resp['district'] = center['district_name']
+    resp['pincode'] = center['pincode']
     # resp['min_age_limit'] = session['min_age_limit']
     resp['vaccine'] = session['vaccine']
     resp['available_capacity_dose1'] = session['available_capacity_dose1']

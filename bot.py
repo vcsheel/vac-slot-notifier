@@ -1,6 +1,5 @@
-import os
 import threading
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 import flask
 import telebot
@@ -14,6 +13,7 @@ from telebot import types
 from rest import *
 from user_dao import *
 from format_util import *
+from utils import validate_dist, validate_pin
 
 my_secret = os.environ['API_KEY']
 app = Flask(__name__)
@@ -61,7 +61,7 @@ def add_dist_input(message):
 def add_dist_input(message):
     user = get_user(message.chat.id)
     if user:
-        dists = [map_reverse(cons.district_map).get(item) for item in user['dist_id']]
+        dists = map_reverse(cons.district_map, user['dist_id'])
         send_stepper_msg(message.chat.id, "Select the entry which you want to remove", dists, remove_from_user_dists, dists)
 
 
@@ -69,7 +69,7 @@ def add_dist_input(message):
 def get_user_saved_details(message):
     user = get_user(message.chat.id)
     if user is not None:
-        user['dist_id'] = [map_reverse(cons.district_map).get(item) for item in user['dist_id']]
+        user['dist_id'] = map_reverse(cons.district_map, user['dist_id'])
         bot.send_message(message.chat.id, format_user_details(user), parse_mode="HTML")
     else:
         bot.send_message(message.chat.id, "Your preference not saved, use /start to save")

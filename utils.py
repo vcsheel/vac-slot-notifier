@@ -1,4 +1,5 @@
 import constants as cons
+from datetime import date
 
 
 def filter_by_age(age, session_min_age_limit):
@@ -39,8 +40,9 @@ def filter_user_pref(user, fee_type, session):
                                                                                               session['vaccine'])
 
 
-def map_reverse(obj):
-    return {v: k for k, v in obj.items()}
+def map_reverse(obj, org_list: list):
+    sub = {v: k for k, v in obj.items()}
+    return [sub.get(item) for item in org_list]
 
 
 def get_age_group_from_age(age):
@@ -50,3 +52,21 @@ def get_age_group_from_age(age):
         return '18-44'
     else:
         return 'Any'
+
+
+def get_date():
+    return date.today().strftime("%d-%m-%Y")
+
+
+def validate_dist(dist_name):
+    try:
+        return cons.district_map[dist_name.strip().lower()]
+    except:
+        return False
+
+
+def validate_pin(pin):
+    if len(pin) == 6:
+        return True
+    else:
+        return False
