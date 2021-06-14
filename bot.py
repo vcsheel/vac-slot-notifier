@@ -7,13 +7,11 @@ from flask import Flask
 from timeloop import Timeloop
 
 from constants import *
-from states import states
-from telebot import types
 
 from rest import *
 from user_dao import *
 from format_util import *
-from utils import validate_dist, validate_pin
+from utils import validate_dist, validate_pin, validate_input, create_reply_keyboard, get_dist_for_state, isCancel
 
 my_secret = os.environ['API_KEY']
 app = Flask(__name__)
@@ -263,12 +261,22 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
     # print(resp)
     if resp is not None and len(resp) > 0:
         print('Slots found for ', chat_id, ' for total ', len(resp), ' days')
-        bot.send_message(chat_id, text=format_message(resp), parse_mode="HTML")
+        response_text = format_message(resp)
+        split_text = telebot.util.split_string(response_text, 3000)
+        for text in split_text:
+            try:
+                bot.send_message(chat_id, text=text, parse_mode="HTML")
+            except Exception as e:
+                print("User...exception while sending message", chat_id)
+                print(e)
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         if not isThreaded:
-            bot.send_message(chat_id, "No slots found")
-
+            try:
+                bot.send_message(chat_id, "No slots found")
+            except Exception as e:
+                print("User...exception while sending message", chat_id)
+                print(e)
 
 # def get_available_slots_for_thread(chat_id, user, check_date):
 #     print('Checking availability for user ', chat_id)
@@ -288,44 +296,13 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
 #################################
 
 
-def create_reply_keyboard(data):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    buttons = []
-    for key in data:
-        buttons.append(types.KeyboardButton(text=key))
-    keyboard.add(*buttons)
-    return keyboard
-
-
-def validate_input(user_input, expected):
-    if user_input not in expected:
-        return False
-    else:
-        return True
-
-
 def wrong_input_message(chat_id):
     bot.send_message(chat_id, 'Wrong input..., Try again or /cancel to abort')
-
-
-def get_dist_for_state(state):
-    dists = []
-    for i in states:
-        if i['state_name'] == state:
-            dists.append(i['district_name'])
-    return sorted(dists)
 
 
 def send_stepper_msg(chat_id, text, keyboard, state_handler, *arg):
     sent_msg = bot.send_message(chat_id, text, reply_markup=create_reply_keyboard(keyboard))
     bot.register_next_step_handler(sent_msg, state_handler, *arg)
-
-
-def isCancel(msg):
-    if msg == '/cancel':
-        return True
-    else:
-        return False
 
 
 @bot.message_handler(commands=['cancel'])

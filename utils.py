@@ -1,5 +1,9 @@
+from telebot import types
+
 import constants as cons
 from datetime import date
+
+from states import states
 
 
 def filter_by_age(age, session_min_age_limit):
@@ -67,6 +71,37 @@ def validate_dist(dist_name):
 
 def validate_pin(pin):
     if len(pin) == 6:
+        return True
+    else:
+        return False
+
+
+def validate_input(user_input, expected):
+    if user_input not in expected:
+        return False
+    else:
+        return True
+
+
+def create_reply_keyboard(data):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    buttons = []
+    for key in data:
+        buttons.append(types.KeyboardButton(text=key))
+    keyboard.add(*buttons)
+    return keyboard
+
+
+def get_dist_for_state(state):
+    dists = []
+    for i in states:
+        if i['state_name'] == state:
+            dists.append(i['district_name'])
+    return sorted(dists)
+
+
+def isCancel(msg):
+    if msg == '/cancel':
         return True
     else:
         return False
