@@ -254,9 +254,9 @@ def get_available_pincode_slots(chat_id, user, check_date):
         bot.send_message(chat_id, "No slots found")
 
 
-def process_error(e, chat_id):
-    if blocker_user_error in e:
-        print("User ", chat_id, "has blocked the bot......, deleting user")
+def process_error(error, chat_id):
+    if error.error_code == 403 and error.description == blocker_user_error:
+        print(error.description, chat_id)
         delete_user(chat_id)
 
 
@@ -275,18 +275,16 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
                 bot.send_message(chat_id, text=text, parse_mode="HTML")
             except ApiTelegramException as e:
                 print("User...exception while sending message", chat_id)
-                print(e.error_code)
-                print(e.result_json)
-                # process_error(e, chat_id)
+                process_error(e.result_json, chat_id)
 
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         if not isThreaded:
             try:
                 bot.send_message(chat_id, "No slots found")
-            except Exception as e:
+            except ApiTelegramException as e:
                 print("User...exception while sending message", chat_id)
-                process_error(e, chat_id)
+                process_error(e.result_json, chat_id)
 
 # def get_available_slots_for_thread(chat_id, user, check_date):
 #     print('Checking availability for user ', chat_id)

@@ -16,7 +16,7 @@ fee_type_text = "Select your vaccine fee"
 vaccine_text = "Select your vaccine"
 min_slot_text = "Enter your minimum slot requirement"
 
-blocker_user_error = "Error code: 403. Description: Forbidden: bot was blocked by the user"
+blocker_user_error = "Forbidden: bot was blocked by the user"
 
 headers = {"Host": "cdn-api.co-vin.in",
            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:89.0) Gecko/20100101 Firefox/89.0",
