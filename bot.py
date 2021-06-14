@@ -283,7 +283,7 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
                 final_txt = part[0] + part[1]
 
             try:
-                bot.send_message(id, text=final_txt, parse_mode="HTML")
+                bot.send_message(chat_id, text=final_txt, parse_mode="HTML")
 
             except ApiTelegramException as e:
                 print("User...exception while sending message", chat_id, " -- ", e)
