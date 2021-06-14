@@ -255,8 +255,8 @@ def get_available_pincode_slots(chat_id, user, check_date):
 
 
 def process_error(error, chat_id):
-    if error.error_code == 403 and error.description == blocker_user_error:
-        print(error.description, chat_id)
+    if error['error_code'] == 403 and error['description'] == blocker_user_error:
+        print(error['description'], chat_id)
         delete_user(chat_id)
 
 
