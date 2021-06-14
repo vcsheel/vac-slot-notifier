@@ -274,7 +274,7 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
             try:
                 bot.send_message(chat_id, text=text, parse_mode="HTML")
             except ApiTelegramException as e:
-                print("User...exception while sending message", chat_id)
+                print("User...exception while sending message", chat_id, " -- ", e)
                 process_error(e.result_json, chat_id)
 
     else:
@@ -283,22 +283,8 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
             try:
                 bot.send_message(chat_id, "No slots found")
             except ApiTelegramException as e:
-                print("User...exception while sending message", chat_id)
+                print("User...exception while sending message", chat_id, " -- ", e)
                 process_error(e.result_json, chat_id)
-
-# def get_available_slots_for_thread(chat_id, user, check_date):
-#     print('Checking availability for user ', chat_id)
-#     data = get_next7days_by_district(user['dist_id'], check_date)
-#     resp = None
-#     if data is not None:
-#         resp = get_availability_from_data(data, user['dose_type'], user['age'])
-#     # print(resp)
-#     if resp is not None and len(resp) > 0:
-#         print('Slots found for ', chat_id)
-#         bot.send_message(chat_id, format_message(resp, user['dose_type']), parse_mode="HTML")
-#     else:
-#         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
-#         # bot.send_message(id, "No slots found")
 
 
 #################################
