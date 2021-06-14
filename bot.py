@@ -268,7 +268,10 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
                 bot.send_message(chat_id, text=text, parse_mode="HTML")
             except Exception as e:
                 print("User...exception while sending message", chat_id)
-                print(e)
+                print(e.args)
+                print("--------------")
+                for i in e.args:
+                    print(i)
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         if not isThreaded:
