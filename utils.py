@@ -50,11 +50,14 @@ def map_reverse(obj, org_list: list):
 
 
 def get_age_group_from_age(age):
-    if age >= 45:
-        return '45+'
-    elif 18 <= age < 45:
-        return '18-44'
-    else:
+    try:
+        if age >= 45:
+            return '45+'
+        elif 18 <= age < 45:
+            return '18-44'
+        else:
+            return 'Any'
+    except:
         return 'Any'
 
 

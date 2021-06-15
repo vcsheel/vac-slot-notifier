@@ -12,7 +12,7 @@ def format_message(resp):
             message += center['center_name'] + '\n'
             message += center['district'] + " - "
             message += str(center['pincode']) + '\n'
-            message += center['vaccine'] + " - " + center['fee_type']
+            message += center['vaccine'] + " - " + center['fee_type'] + ' | '
             message += 'Age: ' + str(get_age_group_from_age(center['min_age_limit'])) + '\n'
             message += "Dose 1" + " : " + str(center[cons.doses[1]])
             message += " | "
