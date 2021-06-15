@@ -94,8 +94,8 @@ def save_user_details(chat_id, dist, age, dose_type, isUpdate):
         user = populate_pref_fields()
 
     user['dist_id'] = [validate_dist(dist)]
-    user['age'] = int(age)
-    user['dose_type'] = int(dose_type)
+    user['age'] = int(age) if age else None
+    user['dose_type'] = int(dose_type) if dose_type else None
     save_user(chat_id, user)
     print('Saving user details - ', chat_id, ' - ', user)
     return user
