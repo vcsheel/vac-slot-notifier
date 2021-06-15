@@ -16,6 +16,9 @@ fee_type_text = "Select your vaccine fee"
 vaccine_text = "Select your vaccine"
 min_slot_text = "Enter your minimum slot requirement"
 
+stop_notification_text = "Notifications have been stopped!!!"
+start_notification_text = "/subscribe anytime to start receiving notifications"
+
 blocker_user_error = "Forbidden: bot was blocked by the user"
 
 headers = {"Host": "cdn-api.co-vin.in",

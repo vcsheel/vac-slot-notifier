@@ -19,6 +19,9 @@ def format_message(resp):
             message += "Dose 2" + " : " + str(center[cons.doses[2]])
             message += "</code></pre>\n"
 
+    message += '\n'
+    message += 'View all available - /slots' + '\n'
+    message += 'Stop notifications - /unsubscribe' + '\n'
     message += '\n <b>Visit</b> <a href="' + cons.cowin_register_url + '"> CoWIN </a> <b>portal to register</b>'
     return message
 

@@ -8,6 +8,7 @@ from telebot.apihelper import ApiTelegramException
 from timeloop import Timeloop
 
 from constants import *
+from constants import stop_notification_text
 from format_util import *
 from rest import *
 from user_dao import *
@@ -113,9 +114,9 @@ def pause_notifier(message):
             user['notify'] = False
             save_user(message.chat.id, user)
             print('Subscription removed for user ', message.chat.id)
-            bot.send_message(message.chat.id, 'Subscription notification removed')
+            bot.send_message(message.chat.id, stop_notification_text + '\n\n' + start_notification_text)
         else:
-            bot.send_message(message.chat.id, "You don't have any active Subscription")
+            bot.send_message(message.chat.id, "You don't have any active Subscription" + '\n\n' + start_notification_text)
     else:
         bot.send_message(message.chat.id, "Your Preference not found, please register using /start")
         return
