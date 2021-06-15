@@ -4,6 +4,7 @@ import os
 
 import redis
 
+from constants import blocker_user_error
 from utils import validate_dist, get_date, filter_new_centers
 
 REDIS_URL = os.environ['REDIS_URL']
@@ -150,3 +151,9 @@ def save_last_notification_in_db(chat_id, user, resp):
         s_notify = True
 
     return final_resp, s_notify
+
+
+def process_error(error, chat_id):
+    if error['error_code'] == 403 and error['description'] == blocker_user_error:
+        print(error['description'], chat_id)
+        delete_user(chat_id)

@@ -11,6 +11,7 @@ from constants import *
 from format_util import *
 from rest import *
 from user_dao import *
+from user_dao import process_error
 from utils import validate_dist, validate_pin, validate_input, create_reply_keyboard, get_dist_for_state, isCancel
 
 my_secret = os.environ['API_KEY']
@@ -68,6 +69,8 @@ def get_user_saved_details(message):
     user = get_user(message.chat.id)
     if user is not None:
         user['dist_id'] = map_reverse(cons.district_map, user['dist_id'])
+        user['dist_id'] = map(lambda x: x.title(), user['dist_id'])
+
         bot.send_message(message.chat.id, format_user_details(user), parse_mode="HTML")
     else:
         bot.send_message(message.chat.id, "Your preference not saved, use /start to save")
@@ -251,12 +254,6 @@ def get_available_pincode_slots(chat_id, user, check_date):
     else:
         print('No slots found for ', chat_id, "on next 7 days of ", check_date)
         bot.send_message(chat_id, "No slots found")
-
-
-def process_error(error, chat_id):
-    if error['error_code'] == 403 and error['description'] == blocker_user_error:
-        print(error['description'], chat_id)
-        delete_user(chat_id)
 
 
 def get_available_slots(chat_id, user, check_date, isThreaded=False):
