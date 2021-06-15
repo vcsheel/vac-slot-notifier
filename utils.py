@@ -112,10 +112,10 @@ def isCancel(msg):
 
 def is_dose_amount_changed(d_type, r, b_in_A):
     if d_type is None:
-        return r["available_capacity_dose2"] != b_in_A['available_capacity_dose2'] or r["available_capacity_dose1"] != \
+        return r["available_capacity_dose2"] > b_in_A['available_capacity_dose2'] or r["available_capacity_dose1"] > \
                b_in_A['available_capacity_dose1']
     else:
-        return r[d_type] != b_in_A[d_type]
+        return r[d_type] > b_in_A[d_type]
 
 
 def get_splitted_text(response_text):
