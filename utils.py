@@ -1,8 +1,8 @@
-from telebot import types
-
-import constants as cons
 from datetime import date
 
+from telebot import types, util
+
+import constants as cons
 from states import states
 
 
@@ -108,3 +108,68 @@ def isCancel(msg):
         return True
     else:
         return False
+
+
+def is_dose_amount_changed(d_type, r, b_in_A):
+    if d_type is None:
+        return r["available_capacity_dose2"] != b_in_A['available_capacity_dose2'] or r["available_capacity_dose1"] != \
+               b_in_A['available_capacity_dose1']
+    else:
+        return r[d_type] != b_in_A[d_type]
+
+
+def get_splitted_text(response_text):
+    split_text = util.split_string(response_text, 3000)
+
+    resp_list = []
+    # print("Split:", len(split_text))
+    for i in range(len(split_text)):
+        # print(i, "-", len(split_text[i]))
+        final_txt = split_text[i]
+        if i < len(split_text) - 1:
+            part = split_text[i].rpartition('</code></pre>\n')
+            # print(len(part[0]),part[1], len(part[2]))
+            # print('--------------')
+            split_text[i + 1] = part[2] + split_text[i + 1]
+            final_txt = part[0] + part[1]
+        resp_list.append(final_txt)
+    return resp_list
+
+
+def filter_new_centers(current, prev, user):
+    f_resp = {}
+    print('----------------------------------------')
+    print('----------------------------------------')
+
+    for key, B in current.items():
+        if key in prev:
+            A = prev[key]
+
+            res = []
+            for b in B:
+                r = dict(b)
+                b_in_A = next(
+                    (a for a in A if b["center_name"] == a["center_name"] and b["min_age_limit"] == a["min_age_limit"]),
+                    None)
+                if b_in_A:
+                    print('Found matching center: ', b_in_A['center_name'])
+
+                    user_d_t = cons.doses.get(user['dose_type'])
+
+                    if is_dose_amount_changed(user_d_t, r, b_in_A):
+                        print('Diff found in slots... adding to return list')
+                        res.append(r)
+
+                else:
+                    print('Entry not in prev saved notification...', r['center_name'], " - ", r['min_age_limit'])
+                    res.append(r)
+
+            if len(res) > 0:
+                f_resp[key] = res
+
+        else:
+            print("Date not found in prev")
+            f_resp[key] = B
+    print('----------------------------------------')
+    print('----------------------------------------')
+    return f_resp

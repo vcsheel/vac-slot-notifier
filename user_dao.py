@@ -1,9 +1,10 @@
+import copy
 import json
 import os
 
 import redis
 
-from utils import validate_dist, get_date
+from utils import validate_dist, get_date, filter_new_centers
 
 REDIS_URL = os.environ['REDIS_URL']
 redis_handle = redis.from_url(url=REDIS_URL)
@@ -124,3 +125,28 @@ def populate_user_details(user_details):
     if len(user_details) == 4:
         check_date = user_details[3]
     return age, dist, dose_type, check_date
+
+
+def save_last_notification_in_db(chat_id, user, resp):
+    final_resp = copy.deepcopy(resp)
+    try:
+        print('Getting last notification from db')
+        last_nf = user['last_nf']
+        final_resp = filter_new_centers(resp, last_nf, user)
+        if len(final_resp) <= 0:
+            print('Last notification was same, aborting')
+            s_notify = False
+        else:
+            s_notify = True
+            print('Found a diff in notification, notifying user')
+            user['last_nf'] = resp
+            save_user(chat_id, user)
+
+    except Exception as e:
+        print("exc: ", e)
+        print('In except: saving last_nf')
+        user['last_nf'] = resp
+        save_user(chat_id, user)
+        s_notify = True
+
+    return final_resp, s_notify

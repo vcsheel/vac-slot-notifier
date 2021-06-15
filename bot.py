@@ -8,10 +8,9 @@ from telebot.apihelper import ApiTelegramException
 from timeloop import Timeloop
 
 from constants import *
-
+from format_util import *
 from rest import *
 from user_dao import *
-from format_util import *
 from utils import validate_dist, validate_pin, validate_input, create_reply_keyboard, get_dist_for_state, isCancel
 
 my_secret = os.environ['API_KEY']
@@ -265,25 +264,18 @@ def get_available_slots(chat_id, user, check_date, isThreaded=False):
     resp = None
     if data is not None:
         resp = get_availability_from_data(data, user)
-    # print(resp)
-    if resp is not None and len(resp) > 0:
+    final_resp = copy.deepcopy(resp)
+    s_notify = True
+    if isThreaded and len(resp) > 0:
+        final_resp, s_notify = save_last_notification_in_db(chat_id, user, resp)
+
+    if final_resp is not None and len(final_resp) > 0 and s_notify:
         print('Slots found for ', chat_id, ' for total ', len(resp), ' days')
-        response_text = format_message(resp)
-        split_text = telebot.util.split_string(response_text, 3000)
+        resp_list = get_splitted_text(format_message(final_resp))
 
-        # print("Split:", len(split_text))
-        for i in range(len(split_text)):
-            # print(i, "-", len(split_text[i]))
-            final_txt = split_text[i]
-            if i < len(split_text) - 1:
-                part = split_text[i].rpartition('</code></pre>\n')
-                # print(len(part[0]),part[1], len(part[2]))
-                # print('--------------')
-                split_text[i + 1] = part[2] + split_text[i + 1]
-                final_txt = part[0] + part[1]
-
+        for i in resp_list:
             try:
-                bot.send_message(chat_id, text=final_txt, parse_mode="HTML")
+                bot.send_message(chat_id, text=i, parse_mode="HTML")
 
             except ApiTelegramException as e:
                 print("User...exception while sending message", chat_id, " -- ", e)
