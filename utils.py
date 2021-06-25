@@ -149,26 +149,25 @@ def filter_new_centers(current, prev, user):
             for b in B:
                 r = dict(b)
                 b_in_A = next(
-                    (a for a in A if b["center_name"] == a["center_name"] and b["min_age_limit"] == a["min_age_limit"]),
+                    (a for a in A if b["center_name"] == a["center_name"] and b["vaccine"] == a["vaccine"] and b["min_age_limit"] == a["min_age_limit"]),
                     None)
-                if b_in_A:
-                    print('Found matching center: ', b_in_A['center_name'])
 
+                if b_in_A:
                     user_d_t = cons.doses.get(user['dose_type'])
 
                     if is_dose_amount_changed(user_d_t, r, b_in_A):
-                        print('Diff found in slots... adding to return list')
+                        print('Increase in slots for center ', b_in_A['center_name'], " - ", b_in_A['min_age_limit'], " - ", b_in_A['vaccine'])
                         res.append(r)
 
                 else:
-                    print('Entry not in prev saved notification...', r['center_name'], " - ", r['min_age_limit'])
+                    print('Entry not in prev saved notification...', r['center_name'], " - ", r['min_age_limit'], " - ", r['vaccine'])
                     res.append(r)
 
             if len(res) > 0:
                 f_resp[key] = res
 
         else:
-            print("Date not found in prev")
+            print("Date not found in prev: ", key)
             f_resp[key] = B
     print('----------------------------------------')
     print('----------------------------------------')
