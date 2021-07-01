@@ -1,5 +1,4 @@
 from datetime import date
-
 from telebot import types, util
 
 import constants as cons
@@ -153,11 +152,12 @@ def filter_new_centers(current, prev, user):
                     None)
 
                 if b_in_A:
-                    user_d_t = cons.doses.get(user['dose_type'])
-
-                    if is_dose_amount_changed(user_d_t, r, b_in_A):
-                        print('Increase in slots for center ', b_in_A['center_name'], " - ", b_in_A['min_age_limit'], " - ", b_in_A['vaccine'])
-                        res.append(r)
+                    pass
+                    # user_d_t = cons.doses.get(user['dose_type'])
+                    #
+                    # if is_dose_amount_changed(user_d_t, r, b_in_A):
+                    #     print('Increase in slots for center ', b_in_A['center_name'], " - ", b_in_A['min_age_limit'], " - ", b_in_A['vaccine'])
+                    #     res.append(r)
 
                 else:
                     print('Entry not in prev saved notification...', r['center_name'], " - ", r['min_age_limit'], " - ", r['vaccine'])

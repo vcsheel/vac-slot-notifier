@@ -4,11 +4,15 @@ import os
 
 import redis
 
+from datetime import datetime
 from constants import blocker_user_error
 from utils import validate_dist, get_date, filter_new_centers
 
 REDIS_URL = os.environ['REDIS_URL']
 redis_handle = redis.from_url(url=REDIS_URL)
+
+
+fmt = '%Y-%m-%d %H:%M:%S.%f'
 
 
 def get_user(chat_id):
@@ -128,26 +132,44 @@ def populate_user_details(user_details):
     return age, dist, dose_type, check_date
 
 
+def save_user_last_nf_time(chat_id, user, resp, curr_time):
+    user['last_nf'] = resp
+    user['last_nf_time'] = curr_time.strftime(fmt)
+    save_user(chat_id, user)
+
+
 def save_last_notification_in_db(chat_id, user, resp):
     final_resp = copy.deepcopy(resp)
+    curr_time = datetime.now()
     try:
         print('Getting last notification from db')
         last_nf = user['last_nf']
+        last_nf_time = datetime.strptime(user['last_nf_time'], fmt)
+        time_diff = (curr_time-last_nf_time).total_seconds()
         final_resp = filter_new_centers(resp, last_nf, user)
-        if len(final_resp) <= 0:
-            print('Last notification was same, aborting')
-            s_notify = False
-        else:
+
+        print('Time diff bw notification (in sec): ', time_diff)
+        time_diff = time_diff / 3600
+
+        if len(final_resp) > 0:
             s_notify = True
             print('Found a diff in notification, notifying user')
-            user['last_nf'] = resp
-            save_user(chat_id, user)
+            save_user_last_nf_time(chat_id, user, resp, curr_time)
+
+        elif time_diff > 1.0:
+            print('Time diff bw notification: ', time_diff)
+            print('Updating user centers after timer expired...')
+            save_user_last_nf_time(chat_id, user, resp, curr_time)
+            s_notify = False
+
+        else:
+            print('Last notification was same, aborting')
+            s_notify = False
 
     except Exception as e:
         print("exc: ", e)
         print('In except: saving last_nf')
-        user['last_nf'] = resp
-        save_user(chat_id, user)
+        save_user_last_nf_time(chat_id, user, resp, curr_time)
         s_notify = True
 
     return final_resp, s_notify
