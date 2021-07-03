@@ -25,9 +25,9 @@ def filter_by_fee(fee, session_fee):
 
 def filter_by_dose(dose_type, session, min_available=1):
     if dose_type is None:
-        return session['available_capacity'] >= min_available
+        return session['available_capacity'] > min_available
     else:
-        return int(session[cons.doses[dose_type]]) >= min_available
+        return int(session[cons.doses[dose_type]]) > min_available
 
 
 def filter_by_vaccine(vaccine, session_vaccine):
